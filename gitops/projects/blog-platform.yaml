@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: blog-platform
+  namespace: argocd
+spec:
+  description: Blog Platform GitOps workloads
+  sourceRepos:
+    - https://github.com/REPLACE_WITH_ORG/blog-platform.git
+  destinations:
+    - namespace: dev
+      server: https://kubernetes.default.svc
+    - namespace: staging
+      server: https://kubernetes.default.svc
+    - namespace: production
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  roles:
+    - name: read-only
+      description: Read-only access for application developers
+      policies:
+        - p, proj:blog-platform:read-only, applications, get, blog-platform/*, allow
+        - p, proj:blog-platform:read-only, logs, get, blog-platform/*, allow

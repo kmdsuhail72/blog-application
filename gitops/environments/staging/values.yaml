@@ -1,0 +1,17 @@
+backend:
+  replicaCount: 2
+  image:
+    repository: REPLACE_WITH_ACCOUNT_ID.dkr.ecr.REPLACE_WITH_REGION.amazonaws.com/blog-backend
+    tag: main
+  resources:
+    requests: { cpu: 250m, memory: 512Mi }
+    limits: { cpu: "1", memory: 1Gi }
+frontend:
+  replicaCount: 2
+  image:
+    repository: REPLACE_WITH_ACCOUNT_ID.dkr.ecr.REPLACE_WITH_REGION.amazonaws.com/blog-frontend
+    tag: main
+ingress:
+  enabled: true
+  host: staging.example.com
+secretName: blog-app-secrets

@@ -1,0 +1,27 @@
+backend:
+  replicaCount: 4
+  image:
+    repository: REPLACE_WITH_ACCOUNT_ID.dkr.ecr.REPLACE_WITH_REGION.amazonaws.com/blog-backend
+    tag: REPLACE_WITH_IMAGE_SHA
+  resources:
+    requests: { cpu: 500m, memory: 1Gi }
+    limits: { cpu: "2", memory: 2Gi }
+  autoscaling:
+    enabled: true
+    minReplicas: 4
+    maxReplicas: 10
+  rollout:
+    enabled: true
+frontend:
+  replicaCount: 3
+  image:
+    repository: REPLACE_WITH_ACCOUNT_ID.dkr.ecr.REPLACE_WITH_REGION.amazonaws.com/blog-frontend
+    tag: REPLACE_WITH_IMAGE_SHA
+  resources:
+    requests: { cpu: 200m, memory: 256Mi }
+    limits: { cpu: "1", memory: 512Mi }
+ingress:
+  enabled: true
+  host: blog.example.com
+  clusterIssuer: letsencrypt-production
+secretName: blog-app-secrets

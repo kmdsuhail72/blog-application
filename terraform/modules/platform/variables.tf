@@ -1,0 +1,17 @@
+variable "name" { type = string }
+variable "cluster_name" { type = string }
+variable "github_repository" { type = string }
+variable "media_bucket_name" { type = string }
+variable "rds_master_password" { type = string }
+variable "vpc_cidr" { type = string }
+variable "cluster_version" { type = string }
+variable "nat_gateway_per_az" { type = bool }
+variable "node_instance_types" { type = list(string) }
+variable "node_desired_size" { type = number }
+variable "node_min_size" { type = number }
+variable "node_max_size" { type = number }
+variable "rds_instance_class" { type = string }
+variable "rds_multi_az" { type = bool }
+variable "rds_deletion_protection" { type = bool }
+variable "rds_performance_insights_enabled" { type = bool }
+variable "tags" { type = map(string) }

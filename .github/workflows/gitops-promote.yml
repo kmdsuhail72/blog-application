@@ -1,0 +1,44 @@
+name: Promote Production GitOps Release
+
+on:
+  workflow_run:
+    workflows: [Build, Scan, and Publish Images]
+    branches: [main]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Immutable image SHA to promote
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: production-gitops-promotion
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Update desired production image tag
+        env:
+          IMAGE_TAG: ${{ inputs.image_tag || github.event.workflow_run.head_sha }}
+        run: |
+          sed -i -E "s/tag: [A-Za-z0-9._-]+/tag: $IMAGE_TAG/g" gitops/environments/production/values.yaml
+          git diff --check
+          if git diff --quiet -- gitops/environments/production/values.yaml; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gitops/environments/production/values.yaml
+          git commit -m "gitops: promote production images to $IMAGE_TAG"
+          git push

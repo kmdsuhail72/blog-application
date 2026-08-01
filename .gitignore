@@ -1,0 +1,24 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore Python caches
+__pycache__/
+*.pyc
+backend/.venv/
+.venv/
+
+# Ignore logs
+*.log
+
+# Environment files and runtime data
+.env
+backend/.env
+frontend/.env
+backend/uploads/
+
+# Terraform working directories, state, and local backend configuration
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+terraform/**/backend.hcl

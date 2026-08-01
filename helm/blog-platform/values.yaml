@@ -1,0 +1,46 @@
+backend:
+  replicaCount: 2
+  image:
+    repository: blog-backend
+    tag: latest
+  service:
+    port: 8000
+  resources:
+    requests: { cpu: 250m, memory: 512Mi }
+    limits: { cpu: "1", memory: 1Gi }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 70
+  rollout:
+    enabled: false
+    steps:
+      - setWeight: 10
+      - pause: { duration: 2m }
+      - setWeight: 30
+      - pause: { duration: 5m }
+      - setWeight: 60
+      - pause: { duration: 10m }
+frontend:
+  replicaCount: 2
+  image:
+    repository: blog-frontend
+    tag: latest
+  service:
+    port: 80
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { cpu: 500m, memory: 256Mi }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 70
+imagePullSecrets: []
+secretName: blog-app-secrets
+ingress:
+  enabled: false
+  className: nginx
+  host: ""
+  clusterIssuer: letsencrypt-production

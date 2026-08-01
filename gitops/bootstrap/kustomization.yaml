@@ -1,0 +1,5 @@
+resources:
+  - ../projects/blog-platform.yaml
+  - ../applications/blog-dev.yaml
+  - ../applications/blog-staging.yaml
+  - ../applications/blog-production.yaml

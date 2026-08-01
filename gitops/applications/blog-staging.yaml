@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: blog-staging
+  namespace: argocd
+spec:
+  project: blog-platform
+  sources:
+    - repoURL: https://github.com/REPLACE_WITH_ORG/blog-platform.git
+      targetRevision: main
+      path: helm/blog-platform
+      helm:
+        valueFiles: [$values/gitops/environments/staging/values.yaml]
+    - repoURL: https://github.com/REPLACE_WITH_ORG/blog-platform.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - PruneLast=true
