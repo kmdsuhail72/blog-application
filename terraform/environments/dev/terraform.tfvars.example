@@ -1,4 +1,4 @@
-aws_region        = "ap-south-1"
+aws_region        = "ap-south-2"
 github_repository = "your-github-org/blog-platform"
 media_bucket_name = "replace-with-a-globally-unique-dev-media-bucket"
 # Export TF_VAR_rds_master_password instead of saving it here.

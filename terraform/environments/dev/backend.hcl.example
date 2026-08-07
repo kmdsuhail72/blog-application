@@ -1,5 +1,5 @@
 bucket         = "replace-with-unique-terraform-state-bucket"
 key            = "blog-platform/dev/terraform.tfstate"
-region         = "ap-south-1"
+region         = "ap-south-2"
 dynamodb_table = "blog-platform-terraform-locks"
 encrypt        = true

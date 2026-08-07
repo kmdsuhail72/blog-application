@@ -8,7 +8,7 @@ Create the shared state backend before initializing an environment:
 
     cd terraform/bootstrap
     terraform init
-    terraform apply -var="aws_region=ap-south-1" -var="state_bucket_name=YOUR_UNIQUE_STATE_BUCKET"
+    terraform apply -var="aws_region=ap-south-2" -var="state_bucket_name=YOUR_UNIQUE_STATE_BUCKET"
 
 Copy a target environment's backend.hcl.example to backend.hcl, replace the bucket and region, and keep it local.
 
@@ -24,7 +24,7 @@ Set TF_VAR_rds_master_password in the shell or CI secret store. Do not save prod
 
 ## Configure Kubernetes
 
-    aws eks update-kubeconfig --name blog-production --region ap-south-1
+    aws eks update-kubeconfig --name blog-production --region ap-south-2
     kubectl apply -f ../../k8s/platform/namespaces.yaml
 
 Install ingress-nginx and cert-manager using k8s/platform/README.md. Then deploy the Helm chart to production with ingress enabled and the intended DNS name.
