@@ -23,7 +23,7 @@ def list_posts(
     category: str | None = Query(None),
     tag: str | None = Query(None),
     mine: bool = Query(False),
-    current_user= CURRENT_USER_OPTIONAL_DEP,
+    current_user=CURRENT_USER_OPTIONAL_DEP,
     db: Session = DB_SESSION,
 ):
     if mine and current_user is None:
@@ -47,7 +47,7 @@ def list_posts(
 @router.get("/{post_id}", response_model=PostResponse)
 def get_post(
     post_id: int,
-    current_user= CURRENT_USER_OPTIONAL_DEP,
+    current_user=CURRENT_USER_OPTIONAL_DEP,
     db: Session = DB_SESSION,
 ):
     post = service.get_post(db, post_id)
@@ -84,7 +84,7 @@ def create_post(
 def update_post(
     post_id: int,
     post_data: PostUpdate,
-    current_user= CURRENT_USER_DEP,
+    current_user=CURRENT_USER_DEP,
     db: Session = DB_SESSION,
 ):
     post = service.get_post(db, post_id)
@@ -106,7 +106,7 @@ def update_post(
 
 
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(post_id: int, current_user= CURRENT_USER_DEP, db: Session = DB_SESSION):
+def delete_post(post_id: int, current_user=CURRENT_USER_DEP, db: Session = DB_SESSION):
     post = service.get_post(db, post_id)
     if post is None:
         raise HTTPException(

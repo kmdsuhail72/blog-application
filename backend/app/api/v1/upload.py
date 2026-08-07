@@ -14,6 +14,7 @@ def _write_file(file_path: str, contents: bytes) -> None:
     with open(file_path, "wb") as buffer:
         buffer.write(contents)
 
+
 UPLOAD_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "..", "uploads", "covers"
 )

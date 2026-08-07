@@ -26,7 +26,7 @@ def create_user(user: UserCreate, db: Session = DB_SESSION):
 
 @router.get("/", response_model=list[UserResponse])
 def get_users(
-    current_user= CURRENT_USER_DEP,
+    current_user=CURRENT_USER_DEP,
     db: Session = DB_SESSION,
 ):
     return service.get_users(db)

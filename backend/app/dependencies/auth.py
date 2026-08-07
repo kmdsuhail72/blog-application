@@ -22,9 +22,7 @@ TOKEN_DEP = Depends(oauth2_scheme)
 DB_DEP = Depends(get_db)
 
 
-def get_current_user(
-    token: str = TOKEN_DEP, db: Session = DB_DEP
-) -> User:
+def get_current_user(token: str = TOKEN_DEP, db: Session = DB_DEP) -> User:
     try:
         payload = jwt.decode(
             token, settings.secret_key, algorithms=[settings.algorithm]
