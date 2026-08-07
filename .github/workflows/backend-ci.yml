@@ -17,7 +17,7 @@ jobs:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -27,7 +27,7 @@ jobs:
       - run: ruff check app tests
       - run: black --check app tests
       - run: PYTHONPATH=. pytest -q
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@v7.3.0
         with:
           context: backend
           push: false
