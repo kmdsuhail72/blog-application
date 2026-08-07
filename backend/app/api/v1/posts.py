@@ -1,14 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from app.dependencies.auth import get_current_user, get_current_user_optional
 from app.db.session import get_db
+from app.dependencies.auth import get_current_user, get_current_user_optional
 from app.schemas.post import PostCreate, PostListResponse, PostResponse, PostUpdate
 from app.services.post_service import PostService
 
 router = APIRouter(prefix="/posts", tags=["Posts"])
 
 service = PostService()
+
+CURRENT_USER_OPTIONAL_DEP = Depends(get_current_user_optional)
+CURRENT_USER_DEP = Depends(get_current_user)
+DB_SESSION = Depends(get_db)
 
 
 @router.get("/", response_model=PostListResponse)
@@ -19,8 +23,8 @@ def list_posts(
     category: str | None = Query(None),
     tag: str | None = Query(None),
     mine: bool = Query(False),
-    current_user=Depends(get_current_user_optional),
-    db: Session = Depends(get_db),
+    current_user= CURRENT_USER_OPTIONAL_DEP,
+    db: Session = DB_SESSION,
 ):
     if mine and current_user is None:
         raise HTTPException(
@@ -43,8 +47,8 @@ def list_posts(
 @router.get("/{post_id}", response_model=PostResponse)
 def get_post(
     post_id: int,
-    current_user=Depends(get_current_user_optional),
-    db: Session = Depends(get_db),
+    current_user= CURRENT_USER_OPTIONAL_DEP,
+    db: Session = DB_SESSION,
 ):
     post = service.get_post(db, post_id)
     if post is None:
@@ -65,8 +69,8 @@ def get_post(
 @router.post("/", response_model=PostResponse, status_code=status.HTTP_201_CREATED)
 def create_post(
     post_data: PostCreate,
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
+    current_user=CURRENT_USER_DEP,
+    db: Session = DB_SESSION,
 ):
     post = service.create_post(db, current_user.id, post_data)
     if post is None:
@@ -80,8 +84,8 @@ def create_post(
 def update_post(
     post_id: int,
     post_data: PostUpdate,
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
+    current_user= CURRENT_USER_DEP,
+    db: Session = DB_SESSION,
 ):
     post = service.get_post(db, post_id)
     if post is None:
@@ -102,11 +106,7 @@ def update_post(
 
 
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(
-    post_id: int,
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
+def delete_post(post_id: int, current_user= CURRENT_USER_DEP, db: Session = DB_SESSION):
     post = service.get_post(db, post_id)
     if post is None:
         raise HTTPException(
@@ -118,4 +118,3 @@ def delete_post(
         )
 
     service.delete_post(db, post)
-    return None

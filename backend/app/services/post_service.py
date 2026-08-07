@@ -1,8 +1,9 @@
 import re
+
 from sqlalchemy.orm import Session
 
-from app.models.post import Post
 from app.models.category import Category
+from app.models.post import Post
 from app.models.tag import Tag
 from app.repositories.post_repository import PostRepository
 from app.schemas.post import PostCreate, PostUpdate

@@ -8,7 +8,6 @@ from app.db.session import get_db
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 optional_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login", auto_error=False)
 
@@ -19,8 +18,12 @@ credentials_exception = HTTPException(
 )
 
 
+TOKEN_DEP = Depends(oauth2_scheme)
+DB_DEP = Depends(get_db)
+
+
 def get_current_user(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+    token: str = TOKEN_DEP, db: Session = DB_DEP
 ) -> User:
     try:
         payload = jwt.decode(
@@ -38,8 +41,11 @@ def get_current_user(
     return user
 
 
+OPTIONAL_TOKEN_DEP = Depends(optional_oauth2_scheme)
+
+
 def get_current_user_optional(
-    token: str | None = Depends(optional_oauth2_scheme), db: Session = Depends(get_db)
+    token: str | None = OPTIONAL_TOKEN_DEP, db: Session = DB_DEP
 ) -> User | None:
     if token is None:
         return None

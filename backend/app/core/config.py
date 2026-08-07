@@ -1,14 +1,14 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
-from pydantic import Field, field_validator
 
 
 class Settings(BaseSettings):
-    app_name: str = Field(..., env="APP_NAME")
-    debug: bool = Field(..., env="DEBUG")
-    database_url: str = Field(..., env="DATABASE_URL")
-    secret_key: str = Field(..., env="SECRET_KEY")
-    algorithm: str = Field(..., env="ALGORITHM")
-    access_token_expire_minutes: int = Field(..., env="ACCESS_TOKEN_EXPIRE_MINUTES")
+    app_name: str
+    debug: bool
+    database_url: str
+    secret_key: str
+    algorithm: str
+    access_token_expire_minutes: int
 
     @field_validator("debug", mode="before")
     @classmethod

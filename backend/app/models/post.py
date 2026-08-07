@@ -1,12 +1,6 @@
-from sqlalchemy import Column
-from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy import Text
-from sqlalchemy import ForeignKey
-from sqlalchemy import Boolean
-from sqlalchemy import DateTime
-from sqlalchemy.sql import func
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from app.db.database import Base
 from app.models.post_tag import post_tags

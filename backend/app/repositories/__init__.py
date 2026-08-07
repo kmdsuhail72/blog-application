@@ -1,4 +1,4 @@
-from .user_repository import UserRepository
 from .post_repository import PostRepository
+from .user_repository import UserRepository
 
-__all__ = ["UserRepository", "PostRepository"]
+__all__ = ["PostRepository", "UserRepository"]

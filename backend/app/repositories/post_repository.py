@@ -1,5 +1,4 @@
-from sqlalchemy import func
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from app.models.category import Category

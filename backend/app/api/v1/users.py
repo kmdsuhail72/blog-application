@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.dependencies.auth import get_current_user
 from app.db.session import get_db
+from app.dependencies.auth import get_current_user
 from app.schemas.user import UserCreate, UserResponse
 from app.services.user_service import UserService
 
@@ -10,9 +10,12 @@ router = APIRouter(prefix="/users", tags=["Users"])
 
 service = UserService()
 
+DB_SESSION = Depends(get_db)
+CURRENT_USER_DEP = Depends(get_current_user)
+
 
 @router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
+def create_user(user: UserCreate, db: Session = DB_SESSION):
     created_user = service.create_user(db, user)
     if not created_user:
         raise HTTPException(
@@ -23,7 +26,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=list[UserResponse])
 def get_users(
-    current_user=Depends(get_current_user),
-    db: Session = Depends(get_db),
+    current_user= CURRENT_USER_DEP,
+    db: Session = DB_SESSION,
 ):
     return service.get_users(db)

@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from pydantic import BaseModel
 
@@ -19,7 +18,7 @@ class PostCreate(BaseModel):
     category_id: int
     published: bool = False
     cover_image: str | None = None
-    tags: List[str] | None = None
+    tags: list[str] | None = None
 
 
 class PostUpdate(BaseModel):
@@ -28,7 +27,7 @@ class PostUpdate(BaseModel):
     category_id: int | None = None
     published: bool | None = None
     cover_image: str | None = None
-    tags: List[str] | None = None
+    tags: list[str] | None = None
 
 
 class PostResponse(BaseModel):
@@ -40,7 +39,7 @@ class PostResponse(BaseModel):
     cover_image: str | None = None
     author_id: int
     category_id: int
-    tags: List[TagResponse] = []
+    tags: list[TagResponse] = []
     created_at: datetime | None = None
     updated_at: datetime | None = None
 
@@ -53,4 +52,4 @@ class PostListResponse(BaseModel):
     page: int
     limit: int
     total: int
-    items: List[PostResponse]
+    items: list[PostResponse]

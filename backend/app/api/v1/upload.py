@@ -3,8 +3,16 @@ import uuid
 
 from fastapi import APIRouter, File, HTTPException, UploadFile, status
 from fastapi.responses import JSONResponse
+from starlette.concurrency import run_in_threadpool
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
+
+UPLOAD_COVER_FILE = File(...)
+
+
+def _write_file(file_path: str, contents: bytes) -> None:
+    with open(file_path, "wb") as buffer:
+        buffer.write(contents)
 
 UPLOAD_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "..", "uploads", "covers"
@@ -14,7 +22,7 @@ MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
 
 
 @router.post("/cover")
-async def upload_cover(file: UploadFile = File(...)):
+async def upload_cover(file: UploadFile = UPLOAD_COVER_FILE):
     if file.content_type not in VALID_CONTENT_TYPES:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -36,8 +44,7 @@ async def upload_cover(file: UploadFile = File(...)):
     file_path = os.path.join(UPLOAD_DIR, filename)
 
     os.makedirs(UPLOAD_DIR, exist_ok=True)
-    with open(file_path, "wb") as buffer:
-        buffer.write(contents)
+    await run_in_threadpool(_write_file, file_path, contents)
 
     url = f"/uploads/covers/{filename}"
     return JSONResponse(status_code=status.HTTP_201_CREATED, content={"url": url})

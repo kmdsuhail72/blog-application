@@ -1,9 +1,6 @@
-from sqlalchemy import Table
-from sqlalchemy import Column
-from sqlalchemy import ForeignKey
+from sqlalchemy import Column, ForeignKey, Table
 
 from app.db.database import Base
-
 
 post_tags = Table(
     "post_tags",
