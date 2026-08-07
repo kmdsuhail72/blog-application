@@ -52,10 +52,12 @@ jobs:
           severity: CRITICAL,HIGH
       - name: Configure AWS credentials through OIDC
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION || 'ap-south-2' }}
         uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
-          aws-region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+          aws-region: ${{ env.AWS_REGION }}
       - name: Log in to Amazon ECR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         id: ecr
