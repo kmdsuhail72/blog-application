@@ -45,19 +45,24 @@ jobs:
       - name: Scan image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
         with:
+          scan-type: image
           image-ref: blog-${{ matrix.name }}:${{ github.sha }}
+          vuln-type: os,library
           format: table
           exit-code: '1'
           ignore-unfixed: true
           severity: CRITICAL,HIGH
-      - name: Configure AWS credentials through OIDC
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Configure AWS credentials through OIDC or secrets
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && (secrets.AWS_GITHUB_ACTIONS_ROLE_ARN != '' || secrets.AWS_ACCESS_KEY_ID != '')
         env:
           AWS_REGION: ${{ secrets.AWS_REGION || 'ap-south-2' }}
         uses: aws-actions/configure-aws-credentials@v6.2.3
         with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN || '' }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID || '' }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY || '' }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN || '' }}
       - name: Log in to Amazon ECR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         id: ecr
