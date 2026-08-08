@@ -12,3 +12,7 @@ class TokenData(BaseModel):
     model_config = {
         "extra": "ignore",
     }
+
+
+class VerifyEmailRequest(BaseModel):
+    token: str

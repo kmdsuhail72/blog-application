@@ -11,5 +11,10 @@ class UserResponse(BaseModel):
     id: int
     name: str
     email: EmailStr
+    is_verified: bool
 
     model_config = {"from_attributes": True}
+
+
+class UserCreatedResponse(UserResponse):
+    verification_token: str

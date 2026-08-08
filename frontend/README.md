@@ -1,75 +1,90 @@
-# React + TypeScript + Vite
+﻿# Frontend Service
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend service for the Blog Platform.
+It is built with React, Vite, TypeScript, Tailwind CSS, and React Query.
 
-Currently, two official plugins are available:
+## Purpose
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- User-facing blog interface
+- Account registration and login
+- Email verification flow
+- Post browsing, creation, and editing
+- File upload support
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- Vite
+- TypeScript
+- Tailwind CSS
+- React Router
+- React Hook Form
+- React Query
+- Axios
 
-## Expanding the ESLint configuration
+## Local development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Install dependencies
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```powershell
+cd frontend
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Run development server
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```powershell
+npm run dev
 ```
+
+By default, Vite runs on `http://localhost:5173`.
+
+### Build for production
+
+```powershell
+npm run build
+```
+
+### Preview production build
+
+```powershell
+npm run preview
+```
+
+## Docker
+
+This app is containerized with Docker and served through NGINX.
+
+### Build and run
+
+```powershell
+docker compose up -d --build frontend
+```
+
+## Environment
+
+The frontend uses `VITE_API_URL` to route API calls.
+For the local Docker Compose setup, use:
+
+```env
+VITE_API_URL=/api
+```
+
+## Key files
+
+- `frontend/src/api/auth.ts` — auth requests
+- `frontend/src/context/AuthContext.tsx` — auth state management
+- `frontend/src/components/forms/RegisterForm.tsx` — registration UI
+- `frontend/src/main.tsx` — app bootstrap
+- `frontend/vite.config.ts` — Vite configuration
+
+## Architecture
+
+This frontend is a single-page app that talks to the backend via `/api`.
+The backend is proxied by NGINX at `http://localhost:8080`.
+
+## Notes
+
+- The frontend is served on port `80` inside the container and exposed via NGINX on port `8080`.
+- React Router handles client-side navigation.
+- JWT tokens are managed by the auth context and sent to protected endpoints.

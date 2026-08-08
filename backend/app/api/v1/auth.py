@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.dependencies import get_db
 from app.dependencies.auth import get_current_user
-from app.schemas.auth import Token
+from app.schemas.auth import Token, VerifyEmailRequest
 from app.schemas.user import UserResponse
 from app.services.auth_service import AuthService
 
@@ -23,6 +23,12 @@ def login_for_access_token(
     db: Session = DB_SESSION,
 ):
     user = service.authenticate_user(db, form_data.username, form_data.password)
+    if user == "unverified":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Email address has not been verified",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -32,6 +38,20 @@ def login_for_access_token(
 
     access_token = service.create_token(user.email)
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/verify")
+def verify_email(
+    request: VerifyEmailRequest,
+    db: Session = DB_SESSION,
+):
+    user = service.verify_email_token(db, request.token)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired verification token",
+        )
+    return {"message": "Email verified successfully"}
 
 
 CURRENT_USER_DEP = Depends(get_current_user)

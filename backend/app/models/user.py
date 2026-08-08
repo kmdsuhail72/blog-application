@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.db.database import Base
@@ -14,5 +14,7 @@ class User(Base):
     email = Column(String, unique=True, index=True)
 
     password = Column(String, nullable=False)
+
+    is_verified = Column(Boolean, nullable=False, default=False)
 
     posts = relationship("Post", back_populates="author")
